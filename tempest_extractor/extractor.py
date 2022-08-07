@@ -24,8 +24,7 @@ def handle_data(response: WeatherResponse) -> Iterable[InsertDatapoints]:
     for station in response.data:
         ts = int(arrow.get(station.referenceTime).float_timestamp * 1000)
         # Each observation might have multiple values, at different sensor heights, pick lowest
-        value = min(station.observations,
-                    key=lambda obs: obs.level.value).value
+        value = min(station.observations, key=lambda obs: obs.level.value).value
 
         yield InsertDatapoints(external_id=f"{external_id_prefix}{station.sourceId}", datapoints=[(ts, value)])
 
@@ -41,14 +40,13 @@ def get_current_temp(response: WeatherResponse) -> Iterable[InsertDatapoints]:
 
 
 class BackfillPaginator:
-    def __init__(self):
+    def __init__(self) -> None:
         self.current_states = NoStateStore()
 
     def get_state(self, tags: List[str]) -> arrow.Arrow:
         state_store = RestExtractor.get_current_statestore() or NoStateStore()
         stored_state = state_store.get_state(
-            [RestExtractor.get_current_config().cognite.external_id_prefix +
-             tag for tag in tags]
+            [RestExtractor.get_current_config().cognite.external_id_prefix + tag for tag in tags]
         )
 
         states = [s[0] for s in stored_state if s[0] is not None]
@@ -67,8 +65,7 @@ class BackfillPaginator:
         from_time = state.shift(days=-7)
 
         for tag in tags:
-            self.current_states.expand_state(
-                external_id=tag, low=from_time.int_timestamp * 1000)
+            self.current_states.expand_state(external_id=tag, low=from_time.int_timestamp * 1000)
 
         url = previous_call.url
         url.query["referencetime"] = f"{from_time.strftime('%Y-%m-%dT%H:%M:%S')}/{state.strftime('%Y-%m-%dT%H:%M:%S')}"
@@ -86,14 +83,13 @@ def backfill(response: WeatherResponse) -> Iterable[InsertDatapoints]:
 
 
 class FrontfillPaginator:
-    def __init__(self):
+    def __init__(self) -> None:
         self.current_states = NoStateStore()
 
     def get_state(self, tags: List[str]) -> arrow.Arrow:
         state_store = RestExtractor.get_current_statestore() or NoStateStore()
         stored_state = state_store.get_state(
-            [RestExtractor.get_current_config().cognite.external_id_prefix +
-             tag for tag in tags]
+            [RestExtractor.get_current_config().cognite.external_id_prefix + tag for tag in tags]
         )
 
         states = [s[1] for s in stored_state if s[1] is not None]
@@ -117,8 +113,7 @@ class FrontfillPaginator:
         to_time = state.shift(days=7)
 
         for tag in tags:
-            self.current_states.expand_state(
-                external_id=tag, high=to_time.int_timestamp * 1000)
+            self.current_states.expand_state(external_id=tag, high=to_time.int_timestamp * 1000)
 
         url = previous_call.url
         url.query["referencetime"] = f"{state.strftime('%Y-%m-%dT%H:%M:%S')}/{to_time.strftime('%Y-%m-%dT%H:%M:%S')}"

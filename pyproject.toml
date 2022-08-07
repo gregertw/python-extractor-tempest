@@ -2,8 +2,8 @@
 [tool.poetry]
 name = "tempest_extractor"
 version = "1.0.0"
-description = "A reimplementation of the MET extractor using the Cognite REST Extension for extractor-utils"
-authors = ["Mathias Lohne <mathias.lohne@cognite.com>"]
+description = "Extractor for Tempest weather stations for Cognite CDF"
+authors = ["Greger Wedel <greger.wedel@cognite.com>"]
 
 [tool.black]
 line-length = 120
@@ -15,24 +15,24 @@ line_length=120                # corresponds to -w  flag
 multi_line_output=3            # corresponds to -m  flag
 include_trailing_comma=true    # corresponds to -tc flag
 skip_glob = '^((?!py$).)*$'    # this makes sort all Python files
-known_third_party = ["cognite"]
+known_third_party = ["arrow", "cognite"]
 
 [tool.poetry.dependencies]
 python = ">=3.7,<3.11"
-cognite-sdk-core = "^2.39.1"
-cognite-extractor-utils = "^2.0.0"
+cognite-sdk-core = "^2.56.1"
+cognite-extractor-utils = "^2.2.0"
+cognite-extractor-utils-rest = "^0.1.1"
 
 [tool.poetry.dev-dependencies]
 pyinstaller = "^4.7"
 macholib = {version = "^1.14", platform = "darwin"}             # Used by pyinstaller pn Mac OS
 pywin32-ctypes = {version = "^0.2.0", platform = "win32"}       # Used by pyinstaller on Windows
 pefile = "^2019.4.18"                                           # Used by pyinstaller on Windows
-mypy = "^0.931"
-flake8 = "^4.0.1"
-black = "^21.12b0"
+mypy = "^0.971"
+flake8 = "^5.0.4"
+black = "^22.6.0"
 isort = "^5.10.1"
-pre-commit = "^2.17.0"
-autopep8 = "^1.6.0"
+pre-commit = "^2.20.0"
 
 [tool.poetry.scripts]
 tempest_extractor = "tempest_extractor.__main__:main"

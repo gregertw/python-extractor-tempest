@@ -1,3 +1,4 @@
+from tempest_extractor import __version__
 from tempest_extractor.extractor import extractor
 
 

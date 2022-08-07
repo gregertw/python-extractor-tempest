@@ -14,3 +14,5 @@ Notes as a naive user
 - For the examples, it would be useful with a 'Tested with v...'
 - What is the main entry point for python developers into CDF? Probably the SDK, so we should offer some guidance on how we see python versions, package manage etc to
     ensure that the users have a compatible environment (and can deviate where they need)
+- cogex init installs several git pre-commit hooks that may be a bit too opinionated and do not work out of the box (it seems to fail on unstaged files, as well as sorting
+    of 3rd party)
