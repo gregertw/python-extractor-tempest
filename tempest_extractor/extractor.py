@@ -4,14 +4,14 @@ from typing import Iterable, List, Optional
 import arrow
 from cognite.extractorutils.rest import RestExtractor
 from cognite.extractorutils.rest.http import HttpCall, HttpUrl
-from cognite.extractorutils.rest.types import InsertDatapoints
 from cognite.extractorutils.statestore import NoStateStore
+from cognite.extractorutils.uploader_types import InsertDatapoints
 
 from tempest_extractor import __version__
 from tempest_extractor.dto import WeatherResponse
 
 extractor = RestExtractor(
-    name="met_extractor",
+    name="tempest_extractor",
     description="A reimplementation of the MET extractor using the Cognite REST Extension for extractor-utils",
     version=__version__,
     base_url="https://frost.met.no/",
