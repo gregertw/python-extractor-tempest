@@ -25,3 +25,17 @@ Notes as a naive user
 - Th extractor-utils getting started didn't say anything about the access rights needed on the CDF project to make it work
 - Managed to get it to work, with no code changes!!
 - Timeseries don't have a name or description in CDF
+- Added extraction-pipeline to the config file, but the UI says I need to activate the pipeline. Docs don't tell me anything about what activation is?? Tried 
+    adding dataset read on the dataset for the extractor group. Nope.
+- configtools doesn't give me errors in INFO level, so a wrong yaml config threw me off. I tried to get datas-set-external-id to work, but no errors, 
+    nothing, ended up haing to use data-set-id
+- Really hard to get an overview of the config options for config.yaml: where is the documentation for that??
+- Confusing: what is the difference between scoping extractionpipeline access to a dataset vs an extraction pipeline that is associated with a data set 
+    (per definition)?
+- Was not able to make extractionpipeline work, turned out I missed access to extractionpipelines:run
+- Added continuous_extractor=True, heartbeat_waiting_time=10 to the Extractor() startup
+- cognite: data-set: id/external-id does not work in config.yaml. Only data-set-id: int works
+- No auto-refresh of https://xyz.fusion.cognite.com/project/extpipes/extpipe/:id/health in fusion
+- Extraction pipeline is not really reporting anything while it's running (beyond heartbeats), as I get Successful startup (but that was also when there was 
+    an error), but need to infer ok from no error
+- tempest_client.py and streamer.py don't pass mypy checks
