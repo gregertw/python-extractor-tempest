@@ -9,7 +9,7 @@ from cognite.extractorutils.throttle import throttled_loop
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
 
 from .config import WeatherConfig
-from .tempest_client import FrostApi, WeatherStation
+from .frost_client import FrostApi, WeatherStation
 
 _logger = logging.getLogger(__name__)
 

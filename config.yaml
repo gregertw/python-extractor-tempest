@@ -19,6 +19,10 @@ cognite:
         external-id: "met-pipeline"
     data-set-id: 357629980950767
 
+tempest:
+    token: ${TEMPEST_TOKEN}
+    device_id: ${TEMPEST_DEVICE_ID}
+
 frost:
     client-id: ${FROST_CLIENT_ID}
     elements:

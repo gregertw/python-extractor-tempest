@@ -5,12 +5,6 @@ from cognite.extractorutils.configtools import BaseConfig, LocalStateStoreConfig
 
 
 @dataclass
-class FrostConfig:
-    client_id: str
-    elements: List[str]
-
-
-@dataclass
 class LocationConfig:
     name: Optional[str]
     longitude: Optional[float]
@@ -42,10 +36,22 @@ class BackfillConfig:
 
 
 @dataclass
+class FrostConfig:
+    client_id: str
+    elements: List[str]
+
+
+@dataclass
+class TempestConfig:
+    token: str
+    device_id: str
+
+
+@dataclass
 class WeatherConfig(BaseConfig):
     metrics: Optional[MetricsConfig]
     frost: FrostConfig
     locations: List[LocationConfig]
     backfill: Optional[BackfillConfig]
-
+    tempest: Optional[TempestConfig]
     extractor: ExtractorConfig = ExtractorConfig()

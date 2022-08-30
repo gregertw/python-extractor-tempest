@@ -8,11 +8,12 @@ from cognite.extractorutils import Extractor
 from cognite.extractorutils.statestore import AbstractStateStore
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
 from cognite.extractorutils.util import ensure_time_series
+from tempest_client import TempestCollector
 
-from tempest_extractor import __version__
+from tempest_extractor import __version__, frost_client
 from tempest_extractor.config import LocationConfig, WeatherConfig
+from tempest_extractor.frost_client import FrostApi, WeatherStation
 from tempest_extractor.streamer import Backfiller, Streamer, create_external_id, frontfill
-from tempest_extractor.tempest_client import FrostApi, WeatherStation
 
 
 def init_stations(locations: List[LocationConfig], frost: FrostApi) -> List[WeatherStation]:
@@ -154,16 +155,19 @@ def run_extractor(cognite: CogniteClient, states: AbstractStateStore, config: We
 
 
 def main() -> None:
+
     with Extractor(
-        name="weather_extractor",
-        description="An extractor gathering weather data from the Norwegian Meteorological Institute",
+        name="tempest_extractor",
+        description="An extractor gathering weather data from a Tempest weather station",
         config_class=WeatherConfig,
         version=__version__,
         run_handle=run_extractor,
         continuous_extractor=True,
         heartbeat_waiting_time=10,
     ) as extractor:
-        extractor.run()
+        client = TempestCollector(extractor.config.tempest)
+        client.run()
+        # extractor.run()
 
 
 if __name__ == "__main__":
