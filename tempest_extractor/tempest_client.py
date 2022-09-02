@@ -23,7 +23,7 @@ class TempestCollector:
         return TempestObsSummary.schema().load(json_response)
 
     def _observation_from_response(self, json_response: Dict[str, Any]) -> TempestObservation:
-        a = json_response["obs"]
+        a = json_response["obs"][0]
         if json_response["type"] == "obs_st":
             return TempestObservation(
                 a[0],
@@ -78,6 +78,18 @@ class TempestCollector:
         response.raise_for_status()
         return self._station_from_response(response.json()["stations"][0])
 
+    # Retrieve summaries and reset queue
+    def get_summaries(self):
+        s = self.summaries
+        self.summaries = []
+        return s
+
+    # Retrieve observations and reset queue
+    def get_observations(self):
+        o = self.observations
+        self.observations = []
+        return o
+
     def _on_open(self, wsapp):
         self.ws_id = randint(100000000, 999999999)
         msg = {"type": "listen_start", "device_id": f"{self.config.device_id}", "id": f"{self.ws_id}"}
@@ -86,15 +98,10 @@ class TempestCollector:
     def _on_message(self, wsapp, message):
         obs = json.loads(message)
         # print(json.dumps(obs, indent=2))
-        try:
-            if "summary" in obs:
-                self.summaries.append(self._summary_from_response(obs["summary"]))
-            if "obs" in obs and "type" in obs:
-                self.observations.append(self._observation_from_response(obs))
-        except AttributeError as e:
-            # Because of the callback, an AttributeError of a caught exception is re-raised
-            # Catch that
-            pass
+        if "summary" in obs:
+            self.summaries.append(self._summary_from_response(obs["summary"]))
+        if "obs" in obs and "type" in obs:
+            self.observations.append(self._observation_from_response(obs))
 
     def run(self):
         # websocket.enableTrace(True)
