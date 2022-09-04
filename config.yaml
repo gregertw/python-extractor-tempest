@@ -1,6 +1,6 @@
 logger:
     console:
-        level: DEBUG
+        level: INFO
 
 cognite:
     # Read these from environment variables
@@ -14,7 +14,7 @@ cognite:
         secret: ${COGNITE_CLIENT_SECRET}
         scopes:
             - ${COGNITE_BASE_URL}/.default
-    external-id-prefix: "frost:"
+    external-id-prefix: "tempest:"
     extraction-pipeline:
         external-id: "met-pipeline"
     data-set-id: 357629980950767
@@ -22,23 +22,16 @@ cognite:
 tempest:
     token: ${TEMPEST_TOKEN}
     device_id: ${TEMPEST_DEVICE_ID}
-
-frost:
-    client-id: ${FROST_CLIENT_ID}
+    device_name: ${TEMPEST_DEVICE_NAME}
     elements:
-      - wind_speed
-      - air_temperature
-      - air_pressure_at_sea_level
+      - pressure
+      - wind_avg
 
 extractor:
     create-assets: false
+    upload_interval: 20
+    parallelism: 10
+    collector_interval: 10
 
 backfill:
     backfill-to: "2021-01-01"
-
-locations:
-  # Blindern
-  - station_id: "SN18700"
-
-  # UiB
-  - station_id: "SN50539"

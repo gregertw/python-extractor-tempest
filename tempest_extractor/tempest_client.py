@@ -1,4 +1,5 @@
 import json
+import logging
 from logging import exception
 from random import randint
 from typing import Any, Dict, List
@@ -8,6 +9,8 @@ import websocket
 
 from tempest_extractor.config import TempestConfig
 from tempest_extractor.dataclasses import TempestObservation, TempestObsSummary, TempestStation
+
+_logger = logging.getLogger(__name__)
 
 
 class TempestCollector:
@@ -97,11 +100,13 @@ class TempestCollector:
 
     def _on_message(self, wsapp, message):
         obs = json.loads(message)
-        # print(json.dumps(obs, indent=2))
+        _logger.debug("Websocket message:" + json.dumps(obs, indent=2))
         if "summary" in obs:
             self.summaries.append(self._summary_from_response(obs["summary"]))
+            _logger.info(f"Collector has {len(self.summaries)+1} summaries")
         if "obs" in obs and "type" in obs:
             self.observations.append(self._observation_from_response(obs))
+            _logger.info(f"Collector has {len(self.observations)+1} observations")
 
     def run(self):
         # websocket.enableTrace(True)
