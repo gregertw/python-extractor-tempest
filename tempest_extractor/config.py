@@ -24,6 +24,7 @@ class TempestConfig:
     device_id: str
     device_name: str
     elements: List[str]
+    summaries: List[str]
 
 
 @dataclass

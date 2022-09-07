@@ -23,7 +23,9 @@ class TempestCollector:
         return TempestStation.schema().load(json_response)
 
     def _summary_from_response(self, json_response: Dict[str, Any]) -> TempestObsSummary:
-        return TempestObsSummary.schema().load(json_response)
+        s = TempestObsSummary.schema().load(json_response["summary"])
+        s.epoch = json_response["obs"][0][0]
+        return s
 
     def _observation_from_response(self, json_response: Dict[str, Any]) -> TempestObservation:
         a = json_response["obs"][0]
@@ -101,12 +103,12 @@ class TempestCollector:
     def _on_message(self, wsapp, message):
         obs = json.loads(message)
         _logger.debug("Websocket message:" + json.dumps(obs, indent=2))
-        if "summary" in obs:
-            self.summaries.append(self._summary_from_response(obs["summary"]))
-            _logger.info(f"Collector has {len(self.summaries)+1} summaries")
         if "obs" in obs and "type" in obs:
             self.observations.append(self._observation_from_response(obs))
             _logger.info(f"Collector has {len(self.observations)+1} observations")
+            if "summary" in obs:
+                self.summaries.append(self._summary_from_response(obs))
+                _logger.info(f"Collector has {len(self.summaries)+1} summaries")
 
     def run(self):
         # websocket.enableTrace(True)

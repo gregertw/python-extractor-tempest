@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from operator import attrgetter, truth
 from typing import List, Optional
 
 from dataclasses_json import Undefined, dataclass_json
@@ -81,6 +82,22 @@ class TempestObsSummary:
     pulse_adj_ob_time: Optional[int] = None
     pulse_adj_ob_wind_avg: Optional[float] = None
     pulse_adj_ob_temp: Optional[float] = None
+    epoch: Optional[int] = 0  # Use optional as epoch needs to be set after schema loading the summary
+
+    @classmethod
+    # Returns True for str, False for numeric, and None for does not exist
+    def is_string(cls, attr) -> bool:
+        if attr not in cls.get_elements():
+            return None
+        if attr == "pressure_trend":
+            return True
+        return False
+
+    @classmethod
+    def get_elements(cls):
+        e = [a for a in cls.__annotations__]
+        e.remove("epoch")
+        return e
 
 
 """ From Tempest docs, https://weatherflow.github.io/Tempest/api/swagger/#!/observations/getObservationsByDeviceId
@@ -194,3 +211,20 @@ class TempestObservation:
     nc_rain_accumulation: int = None
     local_day_nc_rain_accumulation: int = None
     precipitation_analysis_type: int = 0
+
+    @classmethod
+    # Returns True for str, False for numeric, and None for does not exist
+    def is_string(cls, attr) -> bool:
+        if attr not in cls.get_elements():
+            return None
+        # Example for string attrs
+        # if attr == "pressure_trend":
+        #    return True
+        return False
+
+    @classmethod
+    def get_elements(cls):
+        e = [a for a in cls.__annotations__]
+        e.remove("epoch")
+        e.remove("type")
+        return e

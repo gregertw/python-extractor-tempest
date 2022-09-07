@@ -7,7 +7,7 @@ from cognite.extractorutils.throttle import throttled_loop
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
 
 from tempest_extractor.config import YamlConfig
-from tempest_extractor.dataclasses import TempestObservation
+from tempest_extractor.dataclasses import TempestObservation, TempestObsSummary
 from tempest_extractor.tempest_client import TempestCollector
 
 _logger = logging.getLogger(__name__)
@@ -38,25 +38,32 @@ class Streamer:
 
         self.config = config
 
-    def _observations_per_element(self, observations: List[TempestObservation]) -> List[Any]:
+    def _datapoints_per_element(
+        self, elements: List[str], observations: List[TempestObservation | TempestObsSummary]
+    ) -> List[Any]:
         if len(observations) == 0:
             return {}
         data = {}
-        for element in self.config.tempest.elements:
+        for element in elements:
             data[element] = []
             for obs in observations:
-                # Tempest uses epoch in seconds, CDF uses milliseconds
-                data[element].append((obs.epoch * 1000, getattr(obs, element)))
+                if getattr(obs, element) != None:
+                    if element == "raining_minutes":
+                        # raining_minutes is a list of 12 observatio
+                        data[element].append((obs.epoch * 1000, sum(getattr(obs, element))))
+                    else:
+                        # Tempest uses epoch in seconds, CDF uses milliseconds
+                        data[element].append((obs.epoch * 1000, getattr(obs, element)))
         return data
 
     def _extract(self) -> None:
         """
-        Collect data from a given sensor using the api. Function to send to thread pool in run().
+        Collect data from a given Tempest device using the api. Function to send to thread pool in run().
         """
         _logger.info(f"Checking data feed from collector for {self.config.tempest.device_id}")
 
-        data = self._observations_per_element(self.collector.get_observations())
-        summaries = self.collector.get_summaries()
+        data = self._datapoints_per_element(self.config.tempest.elements, self.collector.get_observations())
+        data.update(self._datapoints_per_element(self.config.tempest.summaries, self.collector.get_summaries()))
 
         for element in data:
             self.upload_queue.add_to_upload_queue(

@@ -13,7 +13,7 @@ from tempest_client import TempestCollector
 
 from tempest_extractor import __version__
 from tempest_extractor.config import YamlConfig
-from tempest_extractor.dataclasses import TempestStation
+from tempest_extractor.dataclasses import TempestObservation, TempestObsSummary, TempestStation
 from tempest_extractor.tempest_client import TempestCollector
 from tempest_extractor.tempest_streamer import Streamer
 
@@ -30,7 +30,12 @@ def list_time_series(config: YamlConfig, asset_id: Optional[str]) -> List[TimeSe
     """
     time_series = []
 
-    for element in config.tempest.elements:
+    elements = config.tempest.elements + config.tempest.summaries
+
+    for element in elements:
+        if TempestObservation.is_string(element) is None and TempestObsSummary.is_string(element) is None:
+            continue
+        is_str = TempestObservation.is_string(element) or TempestObsSummary.is_string(element)
         external_id = f"{config.cognite.external_id_prefix}{config.tempest.device_id}_{element}"
 
         args = {
@@ -44,6 +49,9 @@ def list_time_series(config: YamlConfig, asset_id: Optional[str]) -> List[TimeSe
 
         if config.cognite.data_set_id:
             args["data_set_id"] = config.cognite.data_set_id
+
+        if is_str:
+            args["is_string"] = True
 
         time_series.append(TimeSeries(**args))
 
@@ -80,6 +88,12 @@ def create_asset(config: YamlConfig, cdf: CogniteClient, station: TempestStation
 
 def run_extractor(cognite: CogniteClient, states: AbstractStateStore, config: YamlConfig, stop_event: Event) -> None:
     logger = logging.getLogger(__name__)
+
+    # If first config item is "all", load all elements
+    if config.tempest.elements[0] == "all":
+        config.tempest.elements = TempestObservation.get_elements()
+    if config.tempest.summaries[0] == "all":
+        config.tempest.summaries = TempestObsSummary.get_elements()
 
     logger.info("Starting Tempest extractor")
     collector = TempestCollector(config.tempest)

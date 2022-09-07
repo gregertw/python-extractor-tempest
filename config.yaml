@@ -24,8 +24,9 @@ tempest:
     device_id: ${TEMPEST_DEVICE_ID}
     device_name: ${TEMPEST_DEVICE_NAME}
     elements:
-      - pressure
-      - wind_avg
+      - all
+    summaries:
+      - all
 
 extractor:
     create-assets: false
