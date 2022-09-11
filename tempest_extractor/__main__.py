@@ -1,7 +1,6 @@
 import logging
-from os import stat
 from threading import Event, Thread
-from typing import Collection, Dict, List, Optional
+from typing import List, Optional
 
 from cognite.client import CogniteClient
 from cognite.client.data_classes import Asset, TimeSeries
@@ -58,6 +57,13 @@ def list_time_series(config: YamlConfig, asset_id: Optional[str]) -> List[TimeSe
     return time_series
 
 
+def delete_time_series(cdf: CogniteClient, timeseries: List[TimeSeries]):
+    to_delete = []
+    for ts in timeseries:
+        to_delete.append(ts.external_id)
+    cdf.time_series.delete(external_id=to_delete, ignore_unknown_ids=True)
+
+
 def create_asset(config: YamlConfig, cdf: CogniteClient, station: TempestStation) -> str:
     """
     Create asset in CDF for the Tempest device. We simplify and support onnly one device in
@@ -104,6 +110,10 @@ def run_extractor(cognite: CogniteClient, states: AbstractStateStore, config: Ya
         assets = None
 
     time_series = list_time_series(config, assets)
+
+    if config.extractor.cleanup:
+        logger.info(f"Deleting {len(time_series)} time series in CDF")
+        delete_time_series(cognite, time_series)
 
     logger.info(f"Ensuring that {len(time_series)} time series exist in CDF")
     ensure_time_series(cognite, time_series)

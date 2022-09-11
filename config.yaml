@@ -30,6 +30,7 @@ tempest:
 
 extractor:
     create-assets: false
+    cleanup: true
     upload_interval: 20
     parallelism: 10
     collector_interval: 10

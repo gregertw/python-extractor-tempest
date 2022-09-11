@@ -11,6 +11,7 @@ class ExtractorConfig:
     upload_interval: int = 10
     parallelism: int = 10
     collector_interval: int = 2
+    cleanup: bool = False
 
 
 @dataclass
