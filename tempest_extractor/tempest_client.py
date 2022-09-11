@@ -32,6 +32,7 @@ class TempestCollector:
         if json_response["type"] == "obs_st":
             return TempestObservation(
                 a[0],
+                "obs_st",
                 a[1],
                 a[2],
                 a[3],
@@ -57,25 +58,54 @@ class TempestCollector:
         elif json_response["type"] == "obs_sky":
             return TempestObservation(
                 a[0],
-                a[1],
-                a[2],
-                a[3],
+                "obs_sky",
                 a[4],
                 a[5],
                 a[6],
                 a[7],
+                a[13],
+                None,
+                None,
+                None,
+                a[1],
+                a[2],
+                a[10],
+                a[3],
+                a[12],
+                None,
+                None,
                 a[8],
                 a[9],
-                a[10],
-                a[11],
-                a[12],
-                a[13],
-                a[14],
                 a[15],
+                a[14],
+                None,
+                None,
                 a[16],
             )
+        elif json_response["type"] == "rapid_wind":
+            return TempestObservation(a[0], "rapid_wind", None, None, a[1], a[2])
         elif json_response["type"] == "obs_air":
-            return TempestObservation(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7])
+            return TempestObservation(
+                a[0],
+                "obs_air",
+                None,
+                None,
+                None,
+                None,
+                None,
+                a[1],
+                a[2],
+                a[3],
+                None,
+                None,
+                None,
+                None,
+                None,
+                a[5],
+                a[4],
+                a[6],
+                a[7],
+            )
         raise ("Unknown Temptest observation type")
 
     def get_station(self):

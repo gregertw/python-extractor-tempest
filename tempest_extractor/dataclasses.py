@@ -190,24 +190,24 @@ Observation Layout
 class TempestObservation:
     epoch: int
     type: str
-    wind_lull: float
-    wind_avg: float
-    wind_gust: float
-    wind_direction: int
+    wind_lull: Optional[float]
+    wind_avg: Optional[float]
+    wind_gust: Optional[float]
+    wind_direction: Optional[int]
     wind_sample_interval: int
-    pressure: float
-    air_temperature: float
-    relative_humidity: int
-    lux: int
-    uv_index: float
-    solar_radiation: int
-    rain_accumulation: int
-    precipitation_type: int
-    avg_strike_distance: float
-    strike_count: int
-    battery_volts: int
-    report_interval: int
-    local_day_rain_accumulation: int
+    pressure: Optional[float]
+    air_temperature: Optional[float]
+    relative_humidity: Optional[int]
+    lux: Optional[int]
+    uv_index: Optional[float]
+    solar_radiation: Optional[int]
+    rain_accumulation: Optional[int]
+    precipitation_type: Optional[int]
+    avg_strike_distance: Optional[float]
+    strike_count: Optional[int]
+    battery_volts: Optional[int]
+    report_interval: Optional[int]
+    local_day_rain_accumulation: Optional[int]
     nc_rain_accumulation: int = None
     local_day_nc_rain_accumulation: int = None
     precipitation_analysis_type: int = 0
