@@ -16,7 +16,7 @@ class ExtractorConfig:
 
 @dataclass
 class BackfillConfig:
-    backfill_to: Union[str, float, int]
+    backfill_days: int = 5
 
 
 @dataclass

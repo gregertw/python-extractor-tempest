@@ -29,11 +29,11 @@ tempest:
       - all
 
 extractor:
-    create-assets: false
+    create-assets: true
     cleanup: true
     upload_interval: 20
     parallelism: 10
     collector_interval: 10
 
 backfill:
-    backfill-to: "2021-01-01"
+    backfill_days: 5

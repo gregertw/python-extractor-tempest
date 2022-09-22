@@ -35,7 +35,7 @@ def list_time_series(config: YamlConfig, asset_id: Optional[str]) -> List[TimeSe
         if TempestObservation.is_string(element) is None and TempestObsSummary.is_string(element) is None:
             continue
         is_str = TempestObservation.is_string(element) or TempestObsSummary.is_string(element)
-        external_id = f"{config.cognite.external_id_prefix}{config.tempest.device_id}_{element}"
+        external_id = f"{config.cognite.external_id_prefix}{config.tempest.device_id}:{element}"
 
         args = {
             "external_id": external_id,
@@ -66,7 +66,7 @@ def delete_time_series(cdf: CogniteClient, timeseries: List[TimeSeries]):
 
 def create_asset(config: YamlConfig, cdf: CogniteClient, station: TempestStation) -> str:
     """
-    Create asset in CDF for the Tempest device. We simplify and support onnly one device in
+    Create asset in CDF for the Tempest device. We simplify and support only one device in
     a station, so we create only one asset.
     Args:
         config: Config parameters
@@ -88,6 +88,10 @@ def create_asset(config: YamlConfig, cdf: CogniteClient, station: TempestStation
             "public_name": station.public_name,
         },
     )
+    if config.cognite.data_set_id:
+        asset.data_set_id = config.cognite.data_set_id
+    if config.extractor.cleanup:
+        cdf.assets.delete(external_id=f"{config.cognite.external_id_prefix}{config.tempest.device_id}")
     created_asset = cdf.assets.create(asset)
     return created_asset.id
 

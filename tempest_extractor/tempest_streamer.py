@@ -67,7 +67,7 @@ class Streamer:
 
         for element in data:
             self.upload_queue.add_to_upload_queue(
-                external_id=f"{self.config.cognite.external_id_prefix}{self.config.tempest.device_id}_{element}",
+                external_id=f"{self.config.cognite.external_id_prefix}{self.config.tempest.device_id}:{element}",
                 datapoints=data[element],
             )
 
