@@ -74,6 +74,9 @@ def create_asset(config: YamlConfig, cdf: CogniteClient, station: TempestStation
     Returns:
         asset_id of asset
     """
+    asset = cdf.assets.retrieve(external_id=f"{config.cognite.external_id_prefix}{config.tempest.device_id}")
+    if asset:
+        return asset.id
     asset = Asset(
         external_id=f"{config.cognite.external_id_prefix}{config.tempest.device_id}",
         name=station.name,

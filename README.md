@@ -1,5 +1,4 @@
-Tempest Weather Station Extractor
-=================
+# Tempest Weather Station Extractor
 
 This repository contains an extractors using the [Cognite Python Extractor Utils
 libary](https://github.com/cognitedata/python-extractor-utils).

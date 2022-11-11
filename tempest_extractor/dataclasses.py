@@ -65,20 +65,20 @@ class TempestObsSummary:
     precip_total_1h: float
     strike_last_dist: int
     strike_last_epoch: int
-    precip_accum_local_yesterday: float
-    precip_analysis_type_yesterday: int
     feels_like: float
     heat_index: float
     wind_chill: float
     wet_bulb_temperature: float
     raining_minutes: List[int]
     dew_point: float
-    precip_minutes_local_day: int
-    precip_minutes_local_yesterday: float
     wet_bulb_globe_temperature: float
     air_density: float
     delta_t: float
     pressure_trend: str
+    precip_minutes_local_yesterday: Optional[float] = None
+    precip_minutes_local_day: Optional[int] = None
+    precip_accum_local_yesterday: Optional[float] = None
+    precip_analysis_type_yesterday: Optional[int] = None
     pulse_adj_ob_time: Optional[int] = None
     pulse_adj_ob_wind_avg: Optional[float] = None
     pulse_adj_ob_temp: Optional[float] = None
