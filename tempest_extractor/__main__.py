@@ -1,4 +1,5 @@
 import logging
+import os
 from threading import Event, Thread
 from typing import List, Optional
 
@@ -8,6 +9,7 @@ from cognite.extractorutils import Extractor
 from cognite.extractorutils.statestore import AbstractStateStore
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
 from cognite.extractorutils.util import ensure_time_series
+from tempest_backfiller import Backfiller
 from tempest_client import TempestCollector
 
 from tempest_extractor import __version__
@@ -121,6 +123,8 @@ def run_extractor(cognite: CogniteClient, states: AbstractStateStore, config: Ya
     if config.extractor.cleanup:
         logger.info(f"Deleting {len(time_series)} time series in CDF")
         delete_time_series(cognite, time_series)
+        os.remove("states.json")
+        states.initialize(force=True)
 
     logger.info(f"Ensuring that {len(time_series)} time series exist in CDF")
     ensure_time_series(cognite, time_series)
@@ -137,8 +141,8 @@ def run_extractor(cognite: CogniteClient, states: AbstractStateStore, config: Ya
     ) as upload_queue:
         if config.backfill:
             logger.info("Starting backfiller")
-            # backfiller = Backfiller(upload_queue, stop_event, frost, config, states)
-            # Thread(target=backfiller.run, name="Backfiller").start()
+            backfiller = Backfiller(upload_queue, stop_event, collector, config, states)
+            Thread(target=backfiller.run, name="Backfiller").start()
 
         # Fill in gap in data between end of last run and now
         logger.info("Starting frontfiller")

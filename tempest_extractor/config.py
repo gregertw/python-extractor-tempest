@@ -17,6 +17,7 @@ class ExtractorConfig:
 @dataclass
 class BackfillConfig:
     backfill_days: int = 5
+    iteration_time: int = 30
 
 
 @dataclass

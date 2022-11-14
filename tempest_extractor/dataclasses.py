@@ -69,12 +69,12 @@ class TempestObsSummary:
     heat_index: float
     wind_chill: float
     wet_bulb_temperature: float
-    raining_minutes: List[int]
     dew_point: float
-    wet_bulb_globe_temperature: float
     air_density: float
     delta_t: float
     pressure_trend: str
+    wet_bulb_globe_temperature: Optional[float] = None
+    raining_minutes: Optional[List[int]] = None
     precip_minutes_local_yesterday: Optional[float] = None
     precip_minutes_local_day: Optional[int] = None
     precip_accum_local_yesterday: Optional[float] = None

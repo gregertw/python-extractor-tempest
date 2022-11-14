@@ -38,32 +38,16 @@ class Streamer:
 
         self.config = config
 
-    def _datapoints_per_element(
-        self, elements: List[str], observations: List[TempestObservation | TempestObsSummary]
-    ) -> List[Any]:
-        if len(observations) == 0:
-            return {}
-        data = {}
-        for element in elements:
-            data[element] = []
-            for obs in observations:
-                if getattr(obs, element) != None:
-                    if element == "raining_minutes":
-                        # raining_minutes is a list of 12 observatio
-                        data[element].append((obs.epoch * 1000, sum(getattr(obs, element))))
-                    else:
-                        # Tempest uses epoch in seconds, CDF uses milliseconds
-                        data[element].append((obs.epoch * 1000, getattr(obs, element)))
-        return data
-
     def _extract(self) -> None:
         """
         Collect data from a given Tempest device using the api. Function to send to thread pool in run().
         """
         _logger.info(f"Checking data feed from collector for {self.config.tempest.device_id}")
 
-        data = self._datapoints_per_element(self.config.tempest.elements, self.collector.get_observations())
-        data.update(self._datapoints_per_element(self.config.tempest.summaries, self.collector.get_summaries()))
+        data = self.collector.datapoints_per_element(self.config.tempest.elements, self.collector.get_observations())
+        data.update(
+            self.collector.datapoints_per_element(self.config.tempest.summaries, self.collector.get_summaries())
+        )
 
         for element in data:
             self.upload_queue.add_to_upload_queue(

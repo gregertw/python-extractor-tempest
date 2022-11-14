@@ -30,10 +30,11 @@ tempest:
 
 extractor:
     create-assets: true
-    cleanup: true
+    cleanup: false # WARNING! true will delete all time series!
     upload_interval: 20
     parallelism: 10
     collector_interval: 10
 
 backfill:
-    backfill_days: 5
+    backfill_days: 100
+    iteration_time: 30 # Should be higher than upload_interval
