@@ -11,6 +11,7 @@ from cognite.extractorutils.uploader import TimeSeriesUploadQueue
 from cognite.extractorutils.util import ensure_time_series
 from tempest_backfiller import Backfiller
 from tempest_client import TempestCollector
+from tempest_frontfiller import Frontfiller
 
 from tempest_extractor import __version__
 from tempest_extractor.config import YamlConfig
@@ -146,7 +147,8 @@ def run_extractor(cognite: CogniteClient, states: AbstractStateStore, config: Ya
 
         # Fill in gap in data between end of last run and now
         logger.info("Starting frontfiller")
-        # frontfill(upload_queue, frost, config, states)
+        frontfiller = Frontfiller(upload_queue, collector, config, states)
+        Thread(target=frontfiller.run, name="Frontfiller").start()
 
         # Start streaming live data
         logger.info("Starting streamer")

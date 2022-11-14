@@ -32,6 +32,8 @@ class TempestCollector:
             return []
         obs = []
         o_type = json_response["type"]
+        if json_response["obs"] == None:
+            return []
         for a in json_response["obs"]:
             if o_type == "obs_st":
                 obs.append(
