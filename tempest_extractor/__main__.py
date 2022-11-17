@@ -15,8 +15,8 @@ from tempest_frontfiller import Frontfiller
 
 from tempest_extractor import __version__
 from tempest_extractor.config import YamlConfig
-from tempest_extractor.dataclasses import TempestObservation, TempestObsSummary, TempestStation
 from tempest_extractor.tempest_client import TempestCollector
+from tempest_extractor.tempest_dataclasses import TempestObservation, TempestObsSummary, TempestStation
 from tempest_extractor.tempest_streamer import Streamer
 
 

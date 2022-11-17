@@ -8,7 +8,7 @@ import requests
 import websocket
 
 from tempest_extractor.config import TempestConfig
-from tempest_extractor.dataclasses import TempestObservation, TempestObsSummary, TempestStation
+from tempest_extractor.tempest_dataclasses import TempestObservation, TempestObsSummary, TempestStation
 
 _logger = logging.getLogger(__name__)
 

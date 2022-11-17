@@ -7,8 +7,8 @@ from cognite.extractorutils.throttle import throttled_loop
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
 
 from tempest_extractor.config import YamlConfig
-from tempest_extractor.dataclasses import TempestObservation, TempestObsSummary
 from tempest_extractor.tempest_client import TempestCollector
+from tempest_extractor.tempest_dataclasses import TempestObservation, TempestObsSummary
 
 _logger = logging.getLogger(__name__)
 

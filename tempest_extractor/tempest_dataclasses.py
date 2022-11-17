@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from operator import attrgetter, truth
 from typing import List, Optional
 
 from dataclasses_json import Undefined, dataclass_json
@@ -60,8 +59,6 @@ class TempestStation:
 @dataclass_json(undefined=Undefined.EXCLUDE)
 @dataclass
 class TempestObsSummary:
-    strike_count_1h: int
-    strike_count_3h: int
     precip_total_1h: float
     strike_last_dist: int
     strike_last_epoch: int
@@ -73,6 +70,8 @@ class TempestObsSummary:
     air_density: float
     delta_t: float
     pressure_trend: str
+    strike_count_3h: Optional[int] = None
+    strike_count_1h: Optional[int] = None
     wet_bulb_globe_temperature: Optional[float] = None
     raining_minutes: Optional[List[int]] = None
     precip_minutes_local_yesterday: Optional[float] = None
