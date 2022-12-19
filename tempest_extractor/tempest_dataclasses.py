@@ -21,12 +21,12 @@ class TempestDevice:
 @dataclass()
 class TempestDeviceItems:
     location_item_id: int
-    location_id: int
+    # location_id: int
     device_id: int
     item: str
-    sort: int
+    # sort: int
     station_id: int
-    station_item_id: int
+    # station_item_id: int
 
 
 @dataclass_json(undefined=Undefined.EXCLUDE)
@@ -60,8 +60,6 @@ class TempestStation:
 @dataclass
 class TempestObsSummary:
     precip_total_1h: float
-    strike_last_dist: int
-    strike_last_epoch: int
     feels_like: float
     heat_index: float
     wind_chill: float
@@ -70,6 +68,8 @@ class TempestObsSummary:
     air_density: float
     delta_t: float
     pressure_trend: str
+    strike_last_epoch: Optional[int] = None
+    strike_last_dist: Optional[int] = None
     strike_count_3h: Optional[int] = None
     strike_count_1h: Optional[int] = None
     wet_bulb_globe_temperature: Optional[float] = None
