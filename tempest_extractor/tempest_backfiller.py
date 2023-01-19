@@ -65,9 +65,9 @@ class Backfiller:
         _logger.debug(
             f"Backfilling from {from_time.isoformat()} to {to_time.isoformat()}, stop at {self.stop_at.isoformat()}"
         )
-
-        if from_time < self.stop_at:
-            _logger.info(f"Backfilling reached configured limit at {self.stop_at}")
+        previous_from_time = self.states.get_state(external_id="last_from")[0] or arrow.utcnow().int_timestamp
+        if from_time < self.stop_at or from_time.int_timestamp >= previous_from_time:
+            _logger.info(f"Backfilling reached configured limit at {self.stop_at.isoformat()}")
             from_time = self.stop_at
             self.done = True
             return
@@ -86,6 +86,7 @@ class Backfiller:
                 external_id=f"{self.config.cognite.external_id_prefix}{self.config.tempest.device_id}:{element}",
                 datapoints=data[element],
             )
+        self.states.set_state(external_id="last_from", low=from_time.int_timestamp)
 
     def run(self) -> None:
         """

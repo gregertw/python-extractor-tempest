@@ -199,4 +199,4 @@ class TempestCollector:
             on_message=self._on_message,
             on_open=self._on_open,
         )
-        wsapp.run_forever()
+        wsapp.run_forever(ping_interval=5)
