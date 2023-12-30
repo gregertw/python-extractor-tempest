@@ -1,14 +1,12 @@
 import logging
 from concurrent.futures.thread import ThreadPoolExecutor
 from threading import Event
-from typing import Any, List
 
-from cognite.extractorutils.throttle import throttled_loop
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
+from cognite.extractorutils.util import throttled_loop
 
 from tempest_extractor.config import YamlConfig
 from tempest_extractor.tempest_client import TempestCollector
-from tempest_extractor.tempest_dataclasses import TempestObservation, TempestObsSummary
 
 _logger = logging.getLogger(__name__)
 

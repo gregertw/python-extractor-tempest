@@ -5,8 +5,8 @@ from typing import List
 
 import arrow
 from cognite.extractorutils.statestore import AbstractStateStore
-from cognite.extractorutils.throttle import throttled_loop
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
+from cognite.extractorutils.util import throttled_loop
 from tempest_client import TempestCollector
 
 from tempest_extractor.config import YamlConfig

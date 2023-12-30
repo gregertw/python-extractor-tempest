@@ -1,12 +1,12 @@
 from dataclasses import dataclass
-from typing import List, Optional, Union
+from typing import List, Optional
 
-from cognite.extractorutils.configtools import BaseConfig, LocalStateStoreConfig, MetricsConfig, StateStoreConfig
+from cognite.extractorutils.configtools import BaseConfig, MetricsConfig, StateStoreConfig
 
 
 @dataclass
 class ExtractorConfig:
-    state_store: StateStoreConfig = StateStoreConfig(local=LocalStateStoreConfig(path="states.json"), raw=None)
+    state_store: StateStoreConfig = None
     create_assets: bool = False
     upload_interval: int = 10
     parallelism: int = 10
@@ -31,7 +31,7 @@ class TempestConfig:
 
 @dataclass
 class YamlConfig(BaseConfig):
-    metrics: Optional[MetricsConfig]
-    backfill: Optional[BackfillConfig]
-    tempest: Optional[TempestConfig]
-    extractor: ExtractorConfig = ExtractorConfig()
+    metrics: Optional[MetricsConfig] = None
+    backfill: Optional[BackfillConfig] = None
+    tempest: Optional[TempestConfig] = None
+    extractor: ExtractorConfig = None
